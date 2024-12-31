@@ -47,6 +47,7 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            transition: background-color 0.3s ease;
         }
 
         #time-control button:hover,
@@ -69,6 +70,60 @@
             color: #333;
             margin-top: 20px;
         }
+
+        .progress-bar-container {
+            margin: 20px 0;
+            text-align: left;
+            width: 100%;
+        }
+
+        .progress-bar {
+            height: 20px;
+            border-radius: 10px;
+            background-color: #e0e0e0;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-bar span {
+            display: block;
+            height: 100%;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .modal-content {
+            background-color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            width: 300px;
+        }
+
+        .modal button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
     </style>
 </head>
 <body>
@@ -95,6 +150,25 @@
             <button id="conquer-btn">Conquer Planet</button>
         </div>
         <div id="status-message"></div>
+        
+        <div class="progress-bar-container">
+            <h3>Energy Level</h3>
+            <div class="progress-bar" id="energy-bar">
+                <span></span>
+            </div>
+            <h3>Ships Remaining</h3>
+            <div class="progress-bar" id="ships-bar">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="gameOverModal">
+        <div class="modal-content">
+            <h2>Game Over</h2>
+            <p>You have run out of energy or ships!</p>
+            <button id="restartBtn">Restart Game</button>
+        </div>
     </div>
 
     <script>
@@ -102,12 +176,17 @@
         let energy = 100;
         let ships = 5;
         let timeUnits = 3;
+        let gamePaused = false;
 
         // Update the UI with current game state
         function updateResources() {
             document.getElementById('energy').textContent = energy;
             document.getElementById('ships').textContent = ships;
             document.getElementById('time-units').textContent = timeUnits;
+
+            // Update progress bars
+            document.getElementById('energy-bar').querySelector('span').style.width = (energy) + '%';
+            document.getElementById('ships-bar').querySelector('span').style.width = (ships * 20) + '%';
         }
 
         // Function to update status message
@@ -115,48 +194,83 @@
             document.getElementById('status-message').textContent = message;
         }
 
+        // Sound Effects
+        function playSound(soundType) {
+            let audio;
+            if (soundType === 'click') {
+                audio = new Audio('click.mp3'); // Add the appropriate sound file
+            } else if (soundType === 'conquer') {
+                audio = new Audio('conquer.mp3'); // Add the appropriate sound file
+            }
+            audio.play();
+        }
+
+        // Game Over modal
+        function gameOver() {
+            document.getElementById('gameOverModal').style.display = 'flex';
+        }
+
         // Event listeners for time jumps
         document.getElementById('past-btn').addEventListener('click', function() {
-            if (timeUnits > 0) {
+            if (timeUnits > 0 && !gamePaused) {
                 timeUnits--;
                 energy += 20;  // Gaining some energy from the past.
                 updateStatus('You jumped to the past! Energy increased.');
+                playSound('click');
                 updateResources();
-            } else {
+            } else if (timeUnits <= 0) {
                 updateStatus('No Time Units left!');
             }
         });
 
         document.getElementById('present-btn').addEventListener('click', function() {
-            if (timeUnits > 0) {
+            if (timeUnits > 0 && !gamePaused) {
                 timeUnits--;
                 updateStatus('You jumped to the present!');
+                playSound('click');
                 updateResources();
-            } else {
+            } else if (timeUnits <= 0) {
                 updateStatus('No Time Units left!');
             }
         });
 
         document.getElementById('future-btn').addEventListener('click', function() {
-            if (timeUnits > 0) {
+            if (timeUnits > 0 && !gamePaused) {
                 timeUnits--;
                 updateStatus('You jumped to the future!');
+                playSound('click');
                 updateResources();
-            } else {
+            } else if (timeUnits <= 0) {
                 updateStatus('No Time Units left!');
             }
         });
 
         // Conquer Planet button
         document.getElementById('conquer-btn').addEventListener('click', function() {
-            if (ships > 0 && energy >= 10) {
+            if (ships > 0 && energy >= 10 && !gamePaused) {
                 ships--;
                 energy -= 10;
                 updateStatus('Planet conquered! You lost a ship and 10 energy.');
+                playSound('conquer');
                 updateResources();
-            } else {
+            } else if (energy < 10 || ships < 1) {
                 updateStatus('Not enough ships or energy to conquer the planet!');
             }
+
+            if (energy <= 0 || ships <= 0) {
+                gameOver();
+            }
+        });
+
+        // Restart game
+        document.getElementById('restartBtn').addEventListener('click', function() {
+            energy = 100;
+            ships = 5;
+            timeUnits = 3;
+            gamePaused = false;
+            updateResources();
+            document.getElementById('gameOverModal').style.display = 'none';
+            updateStatus('Game Restarted!');
         });
 
         // Initial game state setup
