@@ -1,6 +1,7 @@
 Quantum Conqueror is an exciting, strategy-based web game that lets you manipulate time to conquer new planets and expand your empire. As a time-traveling commander, you must manage limited resources—Energy, Ships, and Time Units—to conquer planets scattered across different time periods.
 
 Key Features:
+
 -> Time Manipulation: Jump between the Past, Present, and Future to strategically gain resources, explore new outcomes, and plan your next move. Each time jump consumes valuable Time Units, so use them wisely!
 
 
@@ -14,6 +15,7 @@ Key Features:
 
 
 How to Play:
+
 -> Use Time Units to jump to different time periods. The Past gives you more energy, the Present lets you strategize, and the Future helps you prepare for what's coming.
 
 
