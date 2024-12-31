@@ -1,142 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Quantum Conqueror</title>
-        <style>
-            body {
-                font-family: Arial, sans-serif;
-                background-color: #f4f4f9;
-                color: #333;
-                text-align: center;
-                margin: 0;
-                height: 100vh;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Conqueror</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            text-align: center;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-            .game-container {
-                max-width: 800px;
-                background-color: #fff;
-                border-radius: 10px;
-                padding: 20px;
-                box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-                width: 100%;
-                text-align: center;
-            }
+        .game-container {
+            max-width: 800px;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            text-align: center;
+        }
 
-            h1 {
-                font-size: 2rem;
-                margin-bottom: 20px;
-            }
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
 
-            #resources p {
-                font-size: 1.2rem;
-                margin: 10px 0;
-            }
+        #resources p {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
 
-            #time-control button,
-            #actions button {
-                font-size: 1rem;
-                margin: 10px;
-                padding: 10px 20px;
-                background-color: #4CAF50;
-                color: white;
-                border: none;
-                border-radius: 5px;
-                cursor: pointer;
-            }
+        #time-control button,
+        #actions button {
+            font-size: 1rem;
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-            #time-control button:hover,
-            #actions button:hover {
-                background-color: #45a049;
-            }
+        #time-control button:hover,
+        #actions button:hover {
+            background-color: #45a049;
+        }
 
-            #planet-status p {
-                font-size: 1rem;
-                color: #555;
-            }
+        #planet-status p {
+            font-size: 1rem;
+            color: #555;
+        }
 
-            button:disabled { 
-                background-color: #ddd;
-                cursor: not allowed;
-            }
+        button:disabled {
+            background-color: #ddd;
+            cursor: not-allowed;
+        }
 
-            #status-message {
-                font-size: 1rem;
-                color: #333;
-                margin-top: 20px;
-            }
-            </style>
-    </head>
-    <body>
-        <div class="game-container">
-            <h1>Quantum Conqueror</h1>
-            <div id="resources">
-                <p>Energy: <span id="energy">100</span></p>
-                <p>Ships: <span id="ships">5</span></p>
-                <p>Time Units: <span id="time-units">3</span></p>
-                </div>
-                <div id="time-control">
-                    <button id="past-btn">Jumpt to Past</button>
-                    <button id="presebt-btn">Jump to Present</button>
-                    <button id="future-btn">Jump to Future</button>
-                </div>
-                <div id="battlefield">
-                    <h2>Battlefield</h2>
-                    <p><strong>Neutral Planet 1</strong></p>
-                    <p><strong>Neutral Planet 2</strong></p>
-                </div>
-                <div id="actions">
-                    <button id="Conqueror-btn">Conqueror Planet</button>
-                </div>
-                <div id="status-message"></div>
-            </div>
+        #status-message {
+            font-size: 1rem;
+            color: #333;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>Quantum Conqueror</h1>
+        <div id="resources">
+            <p>Energy: <span id="energy">100</span></p>
+            <p>Ships: <span id="ships">5</span></p>
+            <p>Time Units: <span id="time-units">3</span></p>
+        </div>
+        <div id="time-control">
+            <button id="past-btn">Jump to Past</button>
+            <button id="present-btn">Jump to Present</button>
+            <button id="future-btn">Jump to Future</button>
+            <button id="startButton">Start Game</button>
+            <button id="pauseButton">Pause Game</button>
+        </div>
+        <div id="battlefield">
+            <h2>Battlefield</h2>
+            <p><strong>Neutral Planet 1</strong></p>
+            <p><strong>Neutral Planet 2</strong></p>
+        </div>
+        <div id="actions">
+            <button id="conquer-btn">Conquer Planet</button>
+        </div>
+        <div id="status-message"></div>
+    </div>
 
-            <script>
-                // Game state variables
-                let energy = 100;
-                let ships = 5;
-                let timeunits = 3;
+    <script>
+        // Game state variables
+        let energy = 100;
+        let ships = 5;
+        let timeUnits = 3;
 
-                // Update the UI with current game state
-                function updateResources() {
-                    document.getElementById('energy').textContent = energy;
-                    document.getElementById('ships').textContent = ships;
-                    document.getElementById('time-units').textContent = timeUnits;
-                }
+        // Update the UI with current game state
+        function updateResources() {
+            document.getElementById('energy').textContent = energy;
+            document.getElementById('ships').textContent = ships;
+            document.getElementById('time-units').textContent = timeUnits;
+        }
 
-                // Function to update status message.
-                function updateStatus(message) {
-                    document.getElementById('status-message').textContent = message;
-                }
+        // Function to update status message
+        function updateStatus(message) {
+            document.getElementById('status-message').textContent = message;
+        }
 
-                // Event listeners for time jumps
-                document.getElementById('present-btn').addEventListener('click', function() {
-                    if (timeUnits > 0) {
-                        timeUnits--;
-                        updateStatus('You jumped to the present!');
-                        updateResources();
-                    } else {
-                        updateStatus('No Time Units left!');
-                    }
-                });
-
-                document.getElementById('future-btn').addEventListener('click', function() {
-                    if (ships > 0 && energy >= 10) {
-                        ships--;
-                        energy -= 10;
-                        updateStatus('Planet conuered! You lost a ship and 10 energy.');
-                        updateResources();
-                    } else {
-                        updateStatus('Not enough ships or energy to energy to conquer the planet!');
-                    }
-                });
-
-                // Initial game state setup
+        // Event listeners for time jumps
+        document.getElementById('past-btn').addEventListener('click', function() {
+            if (timeUnits > 0) {
+                timeUnits--;
+                energy += 20;  // Gaining some energy from the past.
+                updateStatus('You jumped to the past! Energy increased.');
                 updateResources();
-            </script>
-        </body>
-        </html>
+            } else {
+                updateStatus('No Time Units left!');
+            }
+        });
+
+        document.getElementById('present-btn').addEventListener('click', function() {
+            if (timeUnits > 0) {
+                timeUnits--;
+                updateStatus('You jumped to the present!');
+                updateResources();
+            } else {
+                updateStatus('No Time Units left!');
+            }
+        });
+
+        document.getElementById('future-btn').addEventListener('click', function() {
+            if (timeUnits > 0) {
+                timeUnits--;
+                updateStatus('You jumped to the future!');
+                updateResources();
+            } else {
+                updateStatus('No Time Units left!');
+            }
+        });
+
+        // Conquer Planet button
+        document.getElementById('conquer-btn').addEventListener('click', function() {
+            if (ships > 0 && energy >= 10) {
+                ships--;
+                energy -= 10;
+                updateStatus('Planet conquered! You lost a ship and 10 energy.');
+                updateResources();
+            } else {
+                updateStatus('Not enough ships or energy to conquer the planet!');
+            }
+        });
+
+        // Initial game state setup
+        updateResources();
+    </script>
+</body>
+</html>
+ 
